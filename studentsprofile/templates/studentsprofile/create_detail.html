@@ -1,0 +1,86 @@
+{% extends 'studentsprofile/base.html' %}
+{% block title %}{{ profile }}{% endblock %}
+{% block profile_active %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid songs-container">
+
+    <div class="row">
+
+        <div class="col-sm-4 col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <a href="{% url 'home:detail' profile.id %}">
+                        {% if profile.profile_logo%}
+                            <img src="{{ profile.profile_logo.url }}" class="img-responsive">
+                        {% else %}
+                            <h3>No image to display</h3>
+                        {% endif %}
+                    </a>
+                    <h2>{{ profile.lname }} ,{{ profile.fname }} {{ profile.mname }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-8 col-md-9">
+
+            <ul class="nav nav-pills" style="margin-bottom: 10px;">
+                <li role="presentation" class="active"><a href="{% url 'home:detail' profile.id %}">View All</a></li>
+                <li role="presentation"><a href="{% url 'home:create_detail' profile.id %}">Add New Detail</a></li>
+            </ul>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <h3>All Profile</h3>
+
+                    {% if error_message %}
+                        <p><strong>{{ error_message }}</strong></p>
+                    {% endif %}
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Gender</th>
+                            <th>Birthday</th>
+                            <th>Address</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for detail in profile.details_set.all %}
+                            <tr>
+                                <td>{{ detail.gender }}</td>
+                                <td>{{ detail.birthday }}</td>
+                                <td>{{ detail.address }}</td>
+                                <td>{{ Action }}</td>
+                                <td>
+                                    <form action="{% url 'home:delete_profile' profile.id detail.id %}" method="post" style="display: inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="profile_id" value="{{ detail.id }}" />
+                                        <button type="submit" class="btn btn-danger btn-xs">
+                                            <span class="glyphicon glyphicon-remove"></span>&nbsp; Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+</title>
+</head>
+<body>
+
+</body>
+</html>

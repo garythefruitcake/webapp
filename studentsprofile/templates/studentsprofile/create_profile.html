@@ -1,0 +1,59 @@
+{% extends 'studentsprofile/base.html' %}
+{% block title %}Add a New Detail{% endblock %}
+{% block profile_active %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+
+    <div class="row">
+
+        <div class="col-sm-4 col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                        <a href="{% url 'profile:detail' profile.id %}">
+                            {% if profile.profile_logo %}
+                                <img src="{{ profile.profile_logo.url }}" class="img-responsive">
+                            {% else %}
+                                <h3>No image to display</h3>
+                            {% endif %}
+                        </a>
+                    <h1>{{ profile.fname }} <small>{{ profile.mname}}</small></h1>
+                    <h2>{{ profile.lname }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-8 col-md-9">
+
+            <ul class="nav nav-pills" style="margin-bottom: 10px;">
+                <li role="presentation"><a href="{% url 'profile:detail' profile.id %}">View All</a></li>
+                <li role="presentation" class="active"><a href="{% url 'profile:create_profile' profile.id %}">Add New Profile/a></li>
+            </ul>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>Add a New Profile</h3>
+                    {% if error_message %}
+                        <p><strong>{{ error_message }}</strong></p>
+                    {% endif %}
+                    <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="profile" value="{{ Profile }}">
+                        {% include 'studentsprofile/form_template.html' %}
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-success">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,96 @@
+{% extends 'studentsprofile/base.html' %}
+{% block profile_active %}active{% endblock %}
+
+{% block body %}
+<div class="albums-container container-fluid">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>{{ user.username }}'s Profiles</h3>
+        </div>
+        {% if profiles %}
+            {% for profile in profiles %}
+                <div class="col-sm-4 col-lg-2">
+                    <div class="thumbnail">
+                        <a href="{% url 'home:detail' profile.id %}">
+                            <img src="{{ profile.profile_logo.url }}" class="img-responsive">
+                        </a>
+                        <div class="caption">
+                            <h2>{{ profile.fname}}</h2>
+                            <h4>{{ profile.lname }}</h4>
+
+                            <!-- View Details -->
+                            <a href="{% url 'home:detail' profile.id %}" class="btn btn-primary btn-sm" role="button">View Details</a>
+
+                            <!-- Delete Profile -->
+                            <form action="{% url 'home:delete_profile' profile.id %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="profile_id" value="{{ profle.id }}" />
+                                <button type="submit" class="btn btn-default btn-sm">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% cycle '' '' '' '' '' '<div class="clearfix visible-lg"></div>' %}
+            {% endfor %}
+        {% else %}
+            <div class="col-sm-12">
+                <br>
+                <a href="{% url 'home:create_profile' %}">
+                    <button type="button" class="btn btn-success">
+                        <span class="glyphicon glyphicon-plus"></span>&nbsp; Add Profile
+                    </button>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    {% if details %}
+        <div class="row">
+            <div class="col-sm-12">
+                <h3>Detail</h3>
+            </div>
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Gender</th>
+                                    <th>Birthday</th>
+                                    <th>Address</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for detail in details %}
+                                    <tr>
+                                        <td>{{ detail.gender}}</td>
+                                        <td>
+                                            {{ detail.birthday }}</td>
+                                        <td>
+                                            {{ detail.address }}</td>
+                                        <td>
+                                        <form action="{% url 'home:delete_profile' profile.id detail.id %}" method="post" style="display: inline;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="profile_id" value="{{ detail.id }}" />
+                                            <button type="submit" class="btn btn-danger btn-xs">
+                                                <span class="glyphicon glyphicon-remove"></span>&nbsp; Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                    </tr>
+
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}
